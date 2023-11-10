@@ -3,19 +3,13 @@ import {  useEffect, useState } from "react";
 import './App.css';
 import { backendurl } from "../config.js";
 
-const Movielog = ({ isEdit, data, handlemovielog}) => {
-   
-  // const [movieName, setMovieName] = useState('');
-  // const [movieImage, setMovieImage] = useState('');
-  // const [releaseDate, setReleaseDate] = useState('');
+const Movielog = ({ isEdit, data, handlemovielog, fetchmovies}) => {
 
   const [formdata, setFormData] = useState({
     Movie_Name: '',
     Movie_Image: '',
     DateOfRelease: ''
   });
-
-
 
   const handleInputChange = (event) => {
     const {name, value} = event.target;
@@ -25,14 +19,10 @@ const Movielog = ({ isEdit, data, handlemovielog}) => {
     });
   };
 
-
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log(formdata);
 
-
-    
     await fetch(
       `${backendurl}/movies`,
     {
@@ -42,7 +32,7 @@ const Movielog = ({ isEdit, data, handlemovielog}) => {
       },
       body: JSON.stringify(formdata)
     })
-
+    await fetchmovies();
     handlemovielog();
   };
 
@@ -63,9 +53,7 @@ const Movielog = ({ isEdit, data, handlemovielog}) => {
             name="Movie_Name"
             value={formdata. Movie_Name}
             onChange={handleInputChange}
-      
           />
-     
         </div>
         <div>
         <label htmlFor="imageUrl">
@@ -77,11 +65,8 @@ const Movielog = ({ isEdit, data, handlemovielog}) => {
             name="Movie_Image"
             value={formdata.Movie_Image}
             onChange={handleInputChange}
-          
           />
-     
         </div>
-
         <div>
         <label htmlFor="dor">
           DateOfRelease:
@@ -93,7 +78,6 @@ const Movielog = ({ isEdit, data, handlemovielog}) => {
             value={formdata.DateOfRelease}
             onChange={handleInputChange}    
           />
-       
         </div>
         <div style={{alignItems:"center"}}>
         <button type="submit">Submit</button>
@@ -148,9 +132,10 @@ function App() {
       {Film.map((movie) => (
         <div
         style={{
-          border:'1px solid',
-          alignItems:"center"
-
+          border:'2px solid',
+          alignItems:"center",
+          margin:4,
+          padding:4
         }}
         key={movie.id}
         >
@@ -164,7 +149,7 @@ function App() {
     </div>
   
 
-  {showMovielog && <Movielog  handlemovielog={handlemovielog}/>}
+  {showMovielog && <Movielog  handlemovielog={handlemovielog} fetchmovies={fetchmovies}/>}
   </>
   )
 }
